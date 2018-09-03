@@ -2,7 +2,8 @@ FROM msales/alpine-base:3.8
 
 ADD https://getcomposer.org/installer composer-setup.php
 
-RUN apk add --no-cache \
+RUN mkdir /msales \
+    && apk add --no-cache \
         gettext \
         curl \
         openssl \
@@ -44,14 +45,19 @@ RUN apk add --no-cache \
         php7-tokenizer \
         php7-apcu \
         php7-redis \
-        && php composer-setup.php --install-dir=/usr/bin/ --filename=composer
+    && php composer-setup.php --install-dir=/usr/bin/ --filename=composer \
+    && rm -f /etc/php7/conf.d/xdebug.ini \
+    && mv /usr/lib/php7/modules/xdebug.so /msales/
+
 
 ADD config/php.ini /etc/php7/php.ini
+ADD config/xdebug.ini /msales/xdebug.ini
 
 WORKDIR /opt/app-root
 
-ADD entrypoint.sh /opt/sys/ppm.sh
+ADD entrypoint.sh /opt/sys/entrypoint.sh
 
 EXPOSE 8080
 
 ENTRYPOINT [ "/opt/sys/entrypoint.sh" ]
+CMD ["php", "-v"]
