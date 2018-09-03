@@ -8,13 +8,15 @@ XDEBUG_PORT=${XDEBUG_PORT:-"9001"}
 
 [[ "$USER_ID" ]] || USER_ID=$(id -u)
 
+cat /etc/passwd > /opt/sys/passwd
 if [ $USER_ID -ne 0 ] ; then
+	echo "== nsswrapper"
 	export USER_ID=$(id -u)
 	export GROUP_ID=$(id -g)
 	export NSS_WRAPPER_PASSWD=/opt/sys/passwd
 	export NSS_WRAPPER_GROUP=/etc/group
 
-	cat /etc/passwd > /opt/sys/passwd
+
 	echo "${USER_NAME}:x:${USER_ID}:${GROUP_ID}::${USER_HOME}:/sbin/nologin" >> /opt/sys/passwd
 
 	export LD_PRELOAD=/usr/lib/libnss_wrapper.so

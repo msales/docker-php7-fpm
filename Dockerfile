@@ -60,4 +60,4 @@ ADD entrypoint.sh /opt/sys/entrypoint.sh
 EXPOSE 8080
 
 ENTRYPOINT [ "/opt/sys/entrypoint.sh" ]
-CMD ["php", "-v"]
+CMD ["php-fpm7", "-F"]
