@@ -47,12 +47,10 @@ RUN mkdir /msales \
         php7-apcu \
         php7-redis \
     && php composer-setup.php --install-dir=/usr/bin/ --filename=composer \
-    && rm -f /etc/php7/conf.d/xdebug.ini \
-    && mv /usr/lib/php7/modules/xdebug.so /msales/
-
+    && rm -f /etc/php7/conf.d/xdebug.ini
 
 ADD config/php.ini /etc/php7/php.ini
-ADD config/xdebug.ini /msales/xdebug.ini
+ADD config/php_xdebug.ini /etc/php7/php_xdebug.ini
 
 WORKDIR /opt/app-root
 
