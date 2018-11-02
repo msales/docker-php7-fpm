@@ -1,6 +1,7 @@
 FROM msales/alpine-base:3.8
 
 ADD https://getcomposer.org/installer composer-setup.php
+ADD https://composer.github.io/installer.sig composer-setup.sig
 
 RUN mkdir /msales \
     && apk add --no-cache \
@@ -46,6 +47,10 @@ RUN mkdir /msales \
         php7-tokenizer \
         php7-apcu \
         php7-redis \
+    && php -r "if (hash('SHA384', file_get_contents('composer-setup.php')) \
+      !== trim(file_get_contents('composer-setup.sig'))) \
+      { unlink('/tmp/composer-setup.php'); echo 'Invalid installer' . PHP_EOL; exit(1); } \
+      else { echo 'Composer installer checksum is valid.' . PHP_EOL; }" \
     && php composer-setup.php --install-dir=/usr/bin/ --filename=composer \
     && rm -f /etc/php7/conf.d/xdebug.ini
 
